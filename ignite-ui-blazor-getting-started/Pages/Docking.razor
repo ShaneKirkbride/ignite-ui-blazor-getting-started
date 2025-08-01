@@ -1,0 +1,66 @@
+@page "/docking"
+@using IgniteUI.Blazor.Controls
+
+<PageTitle>Dock Manager</PageTitle>
+
+<IgbDockManager Height="600px" Layout="@_layout">
+    <IgbContentPane Id="solutionExplorer" Header="Solution Explorer">
+        <p>Solution Explorer content.</p>
+    </IgbContentPane>
+    <IgbContentPane Id="properties" Header="Properties">
+        <p>Properties content.</p>
+    </IgbContentPane>
+    <IgbContentPane Id="code" Header="Program.cs">
+        <p>Code editor.</p>
+    </IgbContentPane>
+    <IgbContentPane Id="output" Header="Output">
+        <p>Build output...</p>
+    </IgbContentPane>
+</IgbDockManager>
+
+@code {
+    private IgbDockManagerLayout _layout = BuildLayout();
+
+    private static IgbDockManagerLayout BuildLayout()
+    {
+        var solution = new IgbContentPane { Id = "solutionExplorer", Header = "Solution Explorer" };
+        var properties = new IgbContentPane { Id = "properties", Header = "Properties" };
+        var code = new IgbContentPane { Id = "code", Header = "Program.cs" };
+        var output = new IgbContentPane { Id = "output", Header = "Output" };
+
+        var leftTop = new IgbTabGroupPane();
+        leftTop.Panes.Add(solution);
+
+        var leftBottom = new IgbTabGroupPane();
+        leftBottom.Panes.Add(properties);
+
+        var leftSplit = new IgbSplitPane
+        {
+            Orientation = SplitPaneOrientation.Vertical,
+            Size = 25
+        };
+        leftSplit.Panes.Add(leftTop);
+        leftSplit.Panes.Add(leftBottom);
+
+        var docGroup = new IgbTabGroupPane();
+        docGroup.Panes.Add(code);
+        docGroup.Panes.Add(output);
+
+        var docRootSplit = new IgbSplitPane();
+        docRootSplit.Panes.Add(docGroup);
+
+        var documentHost = new IgbDocumentHost
+        {
+            RootPane = docRootSplit
+        };
+
+        var root = new IgbSplitPane
+        {
+            Orientation = SplitPaneOrientation.Horizontal
+        };
+        root.Panes.Add(leftSplit);
+        root.Panes.Add(documentHost);
+
+        return new IgbDockManagerLayout { RootPane = root };
+    }
+}
